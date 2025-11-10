@@ -1,5 +1,8 @@
-import Spline from '@splinetool/react-spline'
+import React, { Suspense } from 'react'
 import { motion } from 'framer-motion'
+
+// Lazy-load Spline to avoid blocking/blank screens if it fails to initialize
+const SplineLazy = React.lazy(() => import('@splinetool/react-spline').then(m => ({ default: m.default })))
 
 export default function Hero() {
   return (
@@ -57,7 +60,15 @@ export default function Hero() {
             className="relative h-[420px] sm:h-[520px] lg:h-[560px] rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden"
           >
             <div className="absolute inset-0">
-              <Spline scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode" />
+              <Suspense
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-500/10 via-sky-500/10 to-purple-500/10">
+                    <div className="animate-pulse text-indigo-200/80">Loading 3D...</div>
+                  </div>
+                }
+              >
+                <SplineLazy scene="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode" />
+              </Suspense>
             </div>
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030617]/60 to-transparent" />
           </motion.div>
